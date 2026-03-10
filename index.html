@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QQ用研AI访谈工作台</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* 自定义样式补充 */
+        textarea:focus, select:focus, input:focus {
+            outline: none;
+            ring: 2px;
+            ring-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen py-8">
+    <div class="max-w-4xl mx-auto px-4">
+        <!-- 主卡片 -->
+        <div class="bg-white shadow-lg rounded-xl p-8">
+            
+            <!-- 页面标题 -->
+            <div class="flex items-center gap-3 mb-8 pb-6 border-b border-gray-200">
+                <div id="logo-container" class="w-10 h-10 flex-shrink-0">
+                    <img 
+                        src="C:/Users/zziyuchen/Desktop/logo.png" 
+                        alt="QQ Logo" 
+                        class="w-10 h-10 object-contain"
+                        onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\'w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center text-white font-bold text-lg\'>QQ</div>'"
+                    >
+                </div>
+                <h1 class="text-2xl font-bold text-gray-800">QQ用研AI访谈工作台</h1>
+            </div>
+
+            <!-- 阶段一：输入与生成 -->
+            <div id="phase-one">
+                <!-- 项目背景输入区 -->
+                <div class="mb-6">
+                    <label for="bg-input" class="block text-sm font-medium text-gray-700 mb-2">
+                        项目背景
+                    </label>
+                    <textarea 
+                        id="bg-input" 
+                        rows="5" 
+                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-200 resize-y"
+                        placeholder="请输入本次调研的核心目的、目标群体或业务背景..."
+                    ></textarea>
+                </div>
+
+                <!-- AI 访谈员设定区 -->
+                <div class="mb-8">
+                    <label for="style-select" class="block text-sm font-medium text-gray-700 mb-2">
+                        AI 访谈员风格
+                    </label>
+                    <select 
+                        id="style-select" 
+                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-200"
+                    >
+                        <option value="你是一个充满亲和力的访谈员，多用鼓励性话语，重点挖掘用户的情感体验。">
+                            亲和鼓励型
+                        </option>
+                        <option value="你是一个严谨的访谈员，喜欢针对用户的回答连续追问'为什么'，重点挖掘底层动机。">
+                            逻辑深挖型
+                        </option>
+                    </select>
+                </div>
+
+                <!-- 生成按钮 -->
+                <button 
+                    id="generate-btn" 
+                    class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-6 rounded-lg transition-colors duration-200 flex items-center justify-center gap-2"
+                >
+                    <span>🚀</span>
+                    <span>生成初版访谈提纲</span>
+                </button>
+            </div>
+
+            <!-- 阶段二：人工微调与确认 -->
+            <div id="phase-two" class="hidden">
+                <div class="mb-6">
+                    <hr class="border-gray-200 mb-6">
+                    <h2 class="text-lg font-semibold text-gray-800 mb-6">
+                        第二步：人工审阅与微调
+                    </h2>
+                    
+                    <!-- 提纲编辑区 -->
+                    <div class="mb-6">
+                        <label for="outline-editor" class="block text-sm font-medium text-gray-700 mb-2">
+                            访谈提纲（可编辑）
+                        </label>
+                        <textarea 
+                            id="outline-editor" 
+                            rows="12" 
+                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-200 resize-y font-mono text-sm leading-relaxed"
+                        ></textarea>
+                    </div>
+
+                    <!-- 确认按钮 -->
+                    <button 
+                        id="confirm-btn" 
+                        class="w-full bg-green-600 hover:bg-green-700 text-white font-medium py-3 px-6 rounded-lg transition-colors duration-200 flex items-center justify-center gap-2"
+                    >
+                        <span>✅</span>
+                        <span>提纲确认无误，生成 AI 访谈室链接</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- 阶段三：最终链接发放 -->
+            <div id="phase-three" class="hidden">
+                <div class="mb-6">
+                    <hr class="border-gray-200 mb-6">
+                    
+                    <!-- 展示区 -->
+                    <div class="bg-green-50 border border-green-200 rounded-xl p-6">
+                        <div class="text-center mb-4">
+                            <p class="text-green-800 text-lg font-semibold mb-2">
+                                🎉 专属访谈室已成功生成！
+                            </p>
+                        </div>
+                        
+                        <!-- 链接呈现 -->
+                        <div class="bg-white rounded-lg p-4 border border-green-100">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">
+                                访谈室链接（点击打开）
+                            </label>
+                            <a 
+                                id="final-link" 
+                                href="#" 
+                                target="_blank" 
+                                class="text-blue-600 hover:text-blue-700 break-all text-sm leading-relaxed underline decoration-dotted"
+                            >
+                                加载中...
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 加载状态遮罩 -->
+            <div id="loading-overlay" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                <div class="bg-white rounded-xl p-8 flex flex-col items-center">
+                    <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mb-4"></div>
+                    <p class="text-gray-700 font-medium">正在生成访谈提纲...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 统一配置常量
+        const API_KEY = "app-GcPKhIr2J3ETbjeJo3OW3rg2";
+        const WORKFLOW_URL = "http://api.dify.woa.com/v1/workflows/run";
+        const CHATBOT_BASE_URL = "https://dify-ai.woa.com/chat/0wCY5oRFAhf3iLeA";
+
+        // DOM 元素引用
+        const bgInput = document.getElementById('bg-input');
+        const styleSelect = document.getElementById('style-select');
+        const generateBtn = document.getElementById('generate-btn');
+        const outlineEditor = document.getElementById('outline-editor');
+        const confirmBtn = document.getElementById('confirm-btn');
+        const finalLink = document.getElementById('final-link');
+        const loadingOverlay = document.getElementById('loading-overlay');
+        const phaseOne = document.getElementById('phase-one');
+        const phaseTwo = document.getElementById('phase-two');
+        const phaseThree = document.getElementById('phase-three');
+
+        // 获取提纲逻辑（连接工作流）
+        async function generateOutline() {
+            const projectBackground = bgInput.value.trim();
+            const interviewerStyle = styleSelect.value;
+
+            // 验证输入
+            if (!projectBackground) {
+                alert('请先填写项目背景信息！');
+                bgInput.focus();
+                return;
+            }
+
+            // 显示加载状态
+            loadingOverlay.classList.remove('hidden');
+
+            try {
+                const response = await fetch(WORKFLOW_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${API_KEY}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        inputs: {
+                            project_background: projectBackground,
+                            interviewer_style: interviewerStyle
+                        },
+                        response_mode: 'blocking',
+                        user: 'qq-researcher'
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error(`请求失败，状态码：${response.status}`);
+                }
+
+                const data = await response.json();
+                
+                // 提取提纲文本
+                const outlineText = data.data?.outputs?.text;
+                
+                if (outlineText) {
+                    // 填入编辑器
+                    outlineEditor.value = outlineText;
+                    
+                    // 切换阶段显示
+                    phaseOne.classList.add('hidden');
+                    phaseTwo.classList.remove('hidden');
+                } else {
+                    throw new Error('未能获取到生成的提纲内容');
+                }
+            } catch (error) {
+                console.error('生成提纲出错：', error);
+                alert(`生成提纲失败：${error.message}\n请检查网络连接和配置。`);
+            } finally {
+                // 隐藏加载状态
+                loadingOverlay.classList.add('hidden');
+            }
+        }
+
+        // 生成链接逻辑（拼装聊天室）
+        function generateLink() {
+            const outlineText = outlineEditor.value.trim();
+
+            // 验证提纲内容
+            if (!outlineText) {
+                alert('提纲内容不能为空！');
+                outlineEditor.focus();
+                return;
+            }
+
+            // URL 编码
+            const encodedOutline = encodeURIComponent(outlineText);
+            
+            // 拼接完整链接
+            const fullLink = `${CHATBOT_BASE_URL}?final_outline=${encodedOutline}`;
+            
+            // 隐藏确认按钮
+            confirmBtn.classList.add('hidden');
+            
+            // 显示阶段三并设置链接
+            phaseThree.classList.remove('hidden');
+            finalLink.href = fullLink;
+            finalLink.textContent = fullLink;
+        }
+
+        // 事件监听
+        generateBtn.addEventListener('click', generateOutline);
+        confirmBtn.addEventListener('click', generateLink);
+
+        // 支持回车键提交（仅在生成阶段）
+        bgInput.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' && e.ctrlKey) {
+                generateOutline();
+            }
+        });
+
+        // 初始化：为输入框添加焦点提示动画
+        [bgInput, styleSelect, outlineEditor].forEach(element => {
+            element.addEventListener('focus', function() {
+                this.parentElement.classList.add('transform', 'scale-[1.01]', 'transition-transform', 'duration-200');
+            });
+            
+            element.addEventListener('blur', function() {
+                this.parentElement.classList.remove('transform', 'scale-[1.01]', 'transition-transform', 'duration-200');
+            });
+        });
+    </script>
+</body>
+</html>
